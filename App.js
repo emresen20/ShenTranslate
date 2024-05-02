@@ -1,9 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
-import { StyleSheet, Text, TextInput, Touchable, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TextInput, Touchable, TouchableOpacity, View, Image } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import axios from 'axios';
-import {API_KEY,API_URL} from "@env"
+import { API_KEY, API_URL } from "@env"
 
 export default function App() {
 
@@ -39,111 +39,137 @@ export default function App() {
       console.error('Error translating text:', error.response.data);
     }
   }
-  
 
-return (
-  <View style={styles.container}>
-    <Text style={styles.tittle}>Shen Translate</Text>
-    <View style={styles.dropdowncontainer}>
+
+  return (
+    <View style={styles.container}>
+      <Image style={styles.imageshen} source={require(".//src/images/shenn.png")} />
+      <View style={styles.dropdowncontainer}>
         <DropDownPicker
-            open={openFrom}
-            value={fromLanguage}
-            setOpen={setOpenFrom}
-            setValue={setFromLanguage}
-            items={[
-              {label:'English',value:'English'},
-              {label:'French',value:'French'},
-              {label:'German',value:'German'},
-              {label:'Turkish',value:'Turkish'},
-              {label:'Bulgarian',value:'Bulgarian'}
-              
-            ]}
-            defaultValue={fromLanguage}
-            style={styles.dropdown}
-            containerStyle={{flex:1,alignItems:"center"}}
-            onSelectItem={(item) => {
-              setFromLanguage(item.value)
-            }}
+          open={openFrom}
+          value={fromLanguage}
+          setOpen={setOpenFrom}
+          setValue={setFromLanguage}
+          theme='DARK'
+          zIndex={9999}
+          items={[
+            { label: 'English', value: 'English' },
+            { label: 'French', value: 'French' },
+            { label: 'German', value: 'German' },
+            { label: 'Turkish', value: 'Turkish' },
+            { label: 'Bulgarian', value: 'Bulgarian' }
+
+          ]}
+          defaultValue={fromLanguage}
+          style={styles.dropdown}
+          containerStyle={{ flex: 1, alignItems: "center" }}
+          onSelectItem={(item) => {
+            setFromLanguage(item.value)
+          }}
         />
-           <DropDownPicker
-            open={openTo}
-            value={toLanguage}
-            setOpen={setOpenTO}
-            setValue={setToLanguage}
-            items={[
-              {label:'English',value:'English'},
-              {label:'French',value:'French'},
-              {label:'German',value:'German'},
-              {label:'Turkish',value:'Turkish'},
-              {label:'Bulgarian',value:'Bulgarian'}
-              
-            ]}
-            defaultValue={toLanguage}
-            style={styles.dropdown}
-            containerStyle={{flex:1,alignItems:"center"}}
-            onSelectItem={(item) => {
-              setToLanguage(item.value)
-            }}
+        <Image style={styles.imagecomapre} source={require("./src/images/translating.png")} />
+        <DropDownPicker
+          open={openTo}
+          value={toLanguage}
+          setOpen={setOpenTO}
+          setValue={setToLanguage}
+          theme='DARK'
+          zIndex={9999}
+
+          items={[
+            { label: 'English', value: 'English' },
+            { label: 'French', value: 'French' },
+            { label: 'German', value: 'German' },
+            { label: 'Turkish', value: 'Turkish' },
+            { label: 'Bulgarian', value: 'Bulgarian' }
+
+          ]}
+          defaultValue={toLanguage}
+          style={styles.dropdown}
+          containerStyle={{ flex: 1, alignItems: "center" }}
+          onSelectItem={(item) => {
+            setToLanguage(item.value)
+          }}
         />
-    </View>
-    <TextInput 
+      </View>
+      <TextInput
         style={styles.input}
         onChangeText={text => setInputText(text)}
         value={inputText}
         multiline
-    />
-    <TouchableOpacity 
+      />
+      <TouchableOpacity
         style={styles.button}
         onPress={translateText}
-        >
-          <Text style={styles.buttontext}>
-            Translate
-          </Text>
-    </TouchableOpacity>
-    <Text> translated Text:</Text>
-    <Text> {translatedText} </Text>
-  </View>
-);
+      >
+       <Image style={styles.imagebotton} source={require("./src/images/translation.png")}/>
+      </TouchableOpacity>
+      <Text style={styles.translettextx}> {translatedText} </Text>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
-    alignItems:"center"
+    backgroundColor: '#0b090a',
+    alignItems: "center"
   },
-  tittle:{
-    fontSize:20,
-    marginTop:20
+  tittle: {
+    fontSize: 20,
+    marginTop: 20
 
   },
-  dropdowncontainer:{
-    flexDirection:"row",
-    justifyContent:"space-around"
+  dropdowncontainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems:"center",
+    
   },
-  dropdown:{
-    backgroundColor:"#fff",
-    width:200,
-    marginTop:50,
-    color:"#fff"
+  dropdown: {
+    backgroundColor: "#14213d",
+    width: 150,
+    marginTop: 50,
+    color: "#fff",
+    
   },
-  input:{
+  input: {
     height: 150,
-    width: '100%',
-    borderRadius: 10,
+    width: '90%',
+    borderRadius: 15,
     borderWidth: 1, // Border width
-    borderColor: 'blue', // Border color
-    color: 'black', // Text color
+    borderColor: '#fca311', // Border color
+    color: 'white', // Text color
     padding: 10,
     marginTop: 100
   },
-  button:{
-    backgroundColor:"yellow",
-    width:60,
-    height:50,
-    marginTop:50,
-    justifyContent:"center",
-    alignItems:"center"
+  button: {
+   
+    marginTop: 30,
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  imageshen: {
+    width: 150,
+    height: 150,
+    marginTop: 35,
+    borderRadius: 10,
+
+  },
+  imagecomapre: {
+    height:40,
+    width:40,
+    marginTop:49
+   
+  },
+  translettextx:{
+    color:"white",
+    fontSize:22,
+    marginTop:10
+  },
+  imagebotton:{
+    width:50,
+    height:50
   }
 
 });
