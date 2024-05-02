@@ -1,24 +1,22 @@
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
-import { StyleSheet, Text, TextInput, Touchable, TouchableOpacity, View, Image } from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View, Image, Keyboard } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import axios from 'axios';
 import { API_KEY, API_URL } from "@env"
 
 export default function App() {
 
-  const [inputText, setInputText] = useState('')
-  const [translatedText, setTramslatedText] = useState('')
+  const [inputText, setInputText] = useState('');
+  const [translatedText, setTranslatedText] = useState('');
   const [fromLanguage, setFromLanguage] = useState('English');
   const [toLanguage, setToLanguage] = useState('Turkish');
   const [openFrom, setOpenFrom] = useState(false);
-  const [openTo, setOpenTO] = useState(false)
-
-
+  const [openTo, setOpenTo] = useState(false);
 
   const translateText = async () => {
     try {
-      const response = await axios.post(`${process.env.API_URL}/v1/chat/completions`, {
+      const response = await axios.post(`${API_URL}/v1/chat/completions`, {
         messages: [
           { role: 'user', content: `Translate the following ${fromLanguage} text into ${toLanguage}: "${inputText}"` },
           { role: 'assistant', content: 'translate' }
@@ -28,10 +26,10 @@ export default function App() {
       }, {
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.API_KEY}`
+          'Authorization': `Bearer ${API_KEY}`
         },
       });
-      setTramslatedText(response.data.choices[0].message.content);
+      setTranslatedText(response.data.choices[0].message.content);
       Keyboard.dismiss();
 
     } catch (error) {
@@ -40,72 +38,74 @@ export default function App() {
     }
   }
 
+  const dismissKeyboard = () => {
+    Keyboard.dismiss();
+  }
 
   return (
-    <View style={styles.container}>
-      <Image style={styles.imageshen} source={require(".//src/images/shenn.png")} />
-      <View style={styles.dropdowncontainer}>
-        <DropDownPicker
-          open={openFrom}
-          value={fromLanguage}
-          setOpen={setOpenFrom}
-          setValue={setFromLanguage}
-          theme='DARK'
-          zIndex={9999}
-          items={[
-            { label: 'English', value: 'English' },
-            { label: 'French', value: 'French' },
-            { label: 'German', value: 'German' },
-            { label: 'Turkish', value: 'Turkish' },
-            { label: 'Bulgarian', value: 'Bulgarian' }
-
-          ]}
-          defaultValue={fromLanguage}
-          style={styles.dropdown}
-          containerStyle={{ flex: 1, alignItems: "center" }}
-          onSelectItem={(item) => {
-            setFromLanguage(item.value)
-          }}
+    <TouchableWithoutFeedback onPress={dismissKeyboard}>
+      <View style={styles.container}>
+        <Image style={styles.imageshen} source={require("./src/images/shenn.png")} />
+        <View style={styles.dropdowncontainer}>
+          <DropDownPicker
+            open={openFrom}
+            value={fromLanguage}
+            setOpen={setOpenFrom}
+            setValue={setFromLanguage}
+            theme='DARK'
+            zIndex={9999}
+            items={[
+              { label: 'English', value: 'English' },
+              { label: 'French', value: 'French' },
+              { label: 'German', value: 'German' },
+              { label: 'Turkish', value: 'Turkish' },
+              { label: 'Bulgarian', value: 'Bulgarian' }
+            ]}
+            defaultValue={fromLanguage}
+            style={styles.dropdown}
+            containerStyle={{ flex: 1, alignItems: "center" }}
+            onSelectItem={(item) => {
+              setFromLanguage(item.value)
+            }}
+          />
+          <Image style={styles.imagecomapre} source={require("./src/images/translating.png")} />
+          <DropDownPicker
+            open={openTo}
+            value={toLanguage}
+            setOpen={setOpenTo}
+            setValue={setToLanguage}
+            theme='DARK'
+            zIndex={9999}
+            items={[
+              { label: 'English', value: 'English' },
+              { label: 'French', value: 'French' },
+              { label: 'German', value: 'German' },
+              { label: 'Turkish', value: 'Turkish' },
+              { label: 'Bulgarian', value: 'Bulgarian' }
+            ]}
+            defaultValue={toLanguage}
+            style={styles.dropdown}
+            containerStyle={{ flex: 1, alignItems: "center" }}
+            onSelectItem={(item) => {
+              setToLanguage(item.value)
+            }}
+          />
+        </View>
+        <TextInput
+          style={styles.input}
+          onChangeText={text => setInputText(text)}
+          value={inputText}
+          multiline
         />
-        <Image style={styles.imagecomapre} source={require("./src/images/translating.png")} />
-        <DropDownPicker
-          open={openTo}
-          value={toLanguage}
-          setOpen={setOpenTO}
-          setValue={setToLanguage}
-          theme='DARK'
-          zIndex={9999}
-
-          items={[
-            { label: 'English', value: 'English' },
-            { label: 'French', value: 'French' },
-            { label: 'German', value: 'German' },
-            { label: 'Turkish', value: 'Turkish' },
-            { label: 'Bulgarian', value: 'Bulgarian' }
-
-          ]}
-          defaultValue={toLanguage}
-          style={styles.dropdown}
-          containerStyle={{ flex: 1, alignItems: "center" }}
-          onSelectItem={(item) => {
-            setToLanguage(item.value)
-          }}
-        />
+        <TouchableOpacity
+          style={styles.button}
+          onPress={translateText}
+        >
+          <Image style={styles.imagebutton} source={require("./src/images/translation.png")} />
+        </TouchableOpacity>
+        <Text style={styles.translatedText}> {translatedText} </Text>
       </View>
-      <TextInput
-        style={styles.input}
-        onChangeText={text => setInputText(text)}
-        value={inputText}
-        multiline
-      />
-      <TouchableOpacity
-        style={styles.button}
-        onPress={translateText}
-      >
-       <Image style={styles.imagebotton} source={require("./src/images/translation.png")}/>
-      </TouchableOpacity>
-      <Text style={styles.translettextx}> {translatedText} </Text>
-    </View>
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -115,23 +115,16 @@ const styles = StyleSheet.create({
     backgroundColor: '#0b090a',
     alignItems: "center"
   },
-  tittle: {
-    fontSize: 20,
-    marginTop: 20
-
-  },
   dropdowncontainer: {
     flexDirection: "row",
     justifyContent: "space-around",
-    alignItems:"center",
-    
+    alignItems: "center",
   },
   dropdown: {
     backgroundColor: "#14213d",
     width: 150,
     marginTop: 50,
     color: "#fff",
-    
   },
   input: {
     height: 150,
@@ -144,7 +137,6 @@ const styles = StyleSheet.create({
     marginTop: 100
   },
   button: {
-   
     marginTop: 30,
     justifyContent: "center",
     alignItems: "center"
@@ -154,24 +146,19 @@ const styles = StyleSheet.create({
     height: 150,
     marginTop: 35,
     borderRadius: 10,
-
   },
   imagecomapre: {
-    height:40,
-    width:40,
-    marginTop:49
-   
+    height: 40,
+    width: 40,
+    marginTop: 49
   },
-  translettextx:{
-    color:"white",
-    fontSize:22,
-    marginTop:10
+  translatedText: {
+    color: "white",
+    fontSize: 22,
+    marginTop: 10
   },
-  imagebotton:{
-    width:50,
-    height:50
+  imagebutton: {
+    width: 50,
+    height: 50
   }
-
 });
-
-
