@@ -12,7 +12,7 @@ ShenTranslate is a React Native translate app with using Chatgptapi:
 - DropDownPicker
   
 
-Here are some screenshots and videos of the app:
+Here are some screenshots  of the app:
 
 ![Resim 1](https://r.resimlink.com/m0uaV.png)
 
